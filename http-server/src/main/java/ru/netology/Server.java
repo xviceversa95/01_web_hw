@@ -1,5 +1,7 @@
 package ru.netology;
 
+import org.apache.http.HttpRequest;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
 import java.io.*;
@@ -58,14 +60,17 @@ public class Server {
              ) {
             {
                 Request request = parseRequest(in);
+                request.getQueryParams();
+                request.getQueryParam("value");
 
-                if (request.method == null || request.path == null ) {
+
+                if (request.method == null || request.fullPath == null ) {
                     badRequest(out);
                     out.flush();
                     return;
                 }
 
-                if (!request.path.startsWith("/")) {
+                if (!request.fullPath.startsWith("/")) {
                     badRequest(out);
                     out.flush();
                     return;
@@ -78,7 +83,7 @@ public class Server {
                     return;
                 }
 
-                if (!validPaths.contains(request.path)) {
+                if (!validPaths.contains(request.fullPath)) {
                     badRequest(out);
                     out.flush();
                     return;
@@ -163,6 +168,7 @@ public class Server {
                 .setHeaders(headers)
                 .build();
         return request;
+
     }
 
     //Метод будет искать подстроку в строке = индекс начала вхождения
@@ -203,7 +209,7 @@ public class Server {
     }
 
     public Handler findHandler(Request request){
-        Handler handler = handlersList.get(request.method).get(request.path);
+        Handler handler = handlersList.get(request.method).get(request.getClearPath());
         return handler;
     }
 }

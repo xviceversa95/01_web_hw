@@ -1,6 +1,4 @@
 package ru.netology;
-
-
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,9 +9,10 @@ public class Main {
     Server server = new Server(9999, 64);
 
 //здесь просто добавляем хэндлер
-    server.addHandler("GET", "/default-get.html", new Handler() {
+    server.addHandler("GET", "/messages", new Handler() {
         public void handle(Request request, BufferedOutputStream responseStream) throws IOException {
-            final var filePath = Path.of(".", "public", request.path);
+
+            final var filePath = Path.of(".", "public", "/messages" );
             final var mimeType = Files.probeContentType(filePath);
             final var length = Files.size(filePath);
 
@@ -26,7 +25,6 @@ public class Main {
             ).getBytes());
             Files.copy(filePath, responseStream);
             responseStream.flush();
-
         }
     });
 
