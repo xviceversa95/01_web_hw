@@ -1,5 +1,7 @@
 package ru.netology;
 
+import org.apache.http.client.utils.URLEncodedUtils;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -192,24 +194,6 @@ public class Server {
                         "Connection: close\r\n" +
                         "\r\n"
         ).getBytes());
-        out.flush();
-    }
-
-    public static void sendResponse(Request request, BufferedOutputStream out) throws IOException {
-
-        // смотрим тут путь и возвращаем нужный файлик
-        final var filePath = Path.of(".", "public", request.path);
-        final var mimeType = Files.probeContentType(filePath);
-        final var length = Files.size(filePath);
-
-        out.write((
-                "HTTP/1.1 200 OK\r\n" +
-                        "Content-Type: " + mimeType + "\r\n" +
-                        "Content-Length: " + length + "\r\n" +
-                        "Connection: close\r\n" +
-                        "\r\n"
-        ).getBytes());
-        Files.copy(filePath, out);
         out.flush();
     }
 
